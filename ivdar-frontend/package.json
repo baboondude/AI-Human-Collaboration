@@ -11,5 +11,10 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
-} 
+  "license": "ISC",
+  "devDependencies": {
+    "@types/animejs": "^3.1.13",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2"
+  }
+}
