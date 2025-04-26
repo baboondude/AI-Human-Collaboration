@@ -1,5 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+
+# Load .env before importing settings
+load_dotenv()
 
 from ivdar_backend.config import get_settings
 from ivdar_backend.sheets import fetch_dashboard

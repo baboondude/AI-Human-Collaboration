@@ -1,17 +1,21 @@
 from functools import lru_cache
 from typing import List
 
-from pydantic import BaseSettings, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
 
 class Settings(BaseSettings):
-    spreadsheet_id: str = Field(..., env="SPREADSHEET_ID")
+    spreadsheet_id: str = Field(validation_alias="SPREADSHEET_ID")
     cors_origins: List[str] = Field(
-        default_factory=lambda: ["http://localhost:5173"], env="CORS_ORIGINS"
+        default_factory=lambda: ["http://localhost:5173"], 
+        validation_alias="CORS_ORIGINS"
     )
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True,
+        extra='ignore'
+    )
 
 
 @lru_cache
