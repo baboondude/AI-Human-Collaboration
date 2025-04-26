@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Layout from './components/Layout';
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
-import NotFound from './pages/NotFound';
+import Layout from '@/components/Layout';
+import Home from '@/pages/Home';
+import Dashboard from '@/pages/Dashboard';
+import NotFound from '@/pages/NotFound';
 
 export default function App() {
   return (

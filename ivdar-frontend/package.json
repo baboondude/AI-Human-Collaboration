@@ -2,10 +2,11 @@
   "name": "ivdar-frontend",
   "version": "1.0.0",
   "description": "Intrinsic Value Dynamic Asset Reallocation Frontend",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext .js,.ts,.jsx,.tsx",
+    "lint": "eslint --config eslint.config.js . --ext .js,.ts,.jsx,.tsx",
     "format": "prettier --write .",
     "preview": "vite preview"
   },
@@ -19,6 +20,8 @@
     "@typescript-eslint/parser": "^8.26.1",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.22.0",
+    "eslint-import-resolver-typescript": "^4.3.4",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "^5.2.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "postcss": "^8.5.3",

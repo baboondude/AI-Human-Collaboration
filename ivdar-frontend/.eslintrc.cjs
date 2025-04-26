@@ -7,7 +7,16 @@ module.exports = {
     "prettier"
   ],
   parser: "@typescript-eslint/parser",
-  plugins: ["react", "@typescript-eslint", "react-hooks"],
-  settings: { react: { version: "detect" } },
-  rules: {}
+  plugins: ["react", "@typescript-eslint", "react-hooks", "import"],
+  settings: { 
+    react: { version: "detect" },
+    "import/resolver": {
+      typescript: {
+        project: "./tsconfig.json",
+      },
+    },
+  },
+  rules: {
+    "import/no-relative-parent-imports": "error",
+  }
 }; 
