@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Backend for IVDAR Google-Sheets data pipeline"
 authors = ["baboondude <codstream7@gmail.com>"]
 readme = "README.md"
+packages = [{include = "ivdar_backend"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -12,6 +13,7 @@ google-auth = "^2.39.0"
 fastapi = "^0.115.12"
 uvicorn = "^0.34.2"
 pydantic = "^2.11.3"
+python-dotenv = "^1.1.0"
 
 
 [build-system]
