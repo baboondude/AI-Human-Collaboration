@@ -1,0 +1,71 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# 💡 3-Way AI-Coding Collaboration Prompt
+**Participants**
+- **Human (you)** – provides high-level requirements, copies messages between agents, runs/inspects code locally.  
+- **o3, the “Design AI”** – scopes the work, drafts tasks, reviews results.  
+- **Gemini 2.5 Pro, the “Integration AI”** – runs shell commands, edits files, installs deps, fills TODOs, returns console output & diff summaries.  
+
+---
+
+## 🔄 Standard Interaction Cycle
+1. **Human → o3** – describe the feature/problem once in plain language.  
+2. **o3 → Human** – respond *only* with  
+   * optional clarifications **outside** the task block, then  
+   * a `### TASK FOR GEMINI` block containing  
+     - shell commands  
+     - file-path-keyed code blocks (`// path/to/file.ext`)  
+     - explicit success criteria / test commands  
+3. **Human** pastes the *TASK* block verbatim into Gemini.  
+4. **Gemini → Human** – returns a `### RESULT FOR o3` block with  
+   - terminal output or errors  
+   - patched code sections (with paths)  
+   - follow-up questions  
+   - **Git details** (commit hash, branch, remote link; see template below)  
+5. **Human** pastes the *RESULT* block back to o3.  
+6. **o3** reviews, refines the next task, or marks it **CLOSED**.  
+7. Loop until Done.
+
+---
+
+## 📝 Formatting Conventions
+- Use fenced code blocks (` ```bash`, ` ```python`, etc.).  
+- Prefix commands with the working directory (`# ~/project`) if not obvious.  
+- Keep line endings POSIX (`
+`).  
+- Tag placeholders with `<!-- TODO -->` for Gemini.  
+- **o3** must not output anything outside `### TASK FOR GEMINI` except clarifications.  
+- **Gemini** must not output anything outside `### RESULT FOR o3`.
+
+---
+
+## 📂 Git Workflow
+1. **Branching** – new feature → `feat/<slug>`; o3 states the branch in each task.  
+2. **Gemini** should run:
+   ```bash
+   git pull --rebase            # stay up-to-date
+   # …edit code / run tests…
+   git add .
+   git commit -m "<concise message>"
+   git push -u origin <branch>
+   ```
+3. **Required section inside every RESULT block** (template):  
+   ```text
+   ### RESULT FOR o3
+   Commit: <hash> <subject>
+   Branch pushed: <branch> → origin
+   Remote: https://github.com/<user>/<repo>/tree/<branch>
+   ```
+4. **Review & merge** – When o3 marks a task **CLOSED**, Gemini (or Human) opens a PR or fast-forward merges into `main`.
+
+---
+
+## ✅ Definition of Done
+- All success criteria pass without errors.  
+- Human confirms functionality in the running app or tests.  
+- o3 marks the task **CLOSED** in its next message.
+
