@@ -1,4 +1,5 @@
-import { setupWorker, rest } from "msw";
+import { setupWorker } from "msw/browser";
+import { http, HttpResponse } from "msw";
 import { Allocation } from "@/hooks/useAllocations";
 
 const mockAllocations: Allocation[] = [
@@ -9,7 +10,7 @@ const mockAllocations: Allocation[] = [
 ];
 
 export const worker = setupWorker(
-  rest.get("/api/allocations", (_, res, ctx) =>
-    res(ctx.status(200), ctx.json(mockAllocations)),
-  ),
+  http.get("/api/allocations", () => {
+    return HttpResponse.json(mockAllocations);
+  }),
 ); 
