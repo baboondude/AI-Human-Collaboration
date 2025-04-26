@@ -12,9 +12,9 @@
     "isolatedModules": true,
     "types": ["vite/client"],
     "esModuleInterop": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["*"]
     },
     "allowSyntheticDefaultImports": true
   },

@@ -1,1 +1,1 @@
-declare module 'animejs/lib/anime.esm.js'; 
+// Custom declarations go here 
