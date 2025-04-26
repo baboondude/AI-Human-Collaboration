@@ -31,8 +31,8 @@ export default function Home() {
       <canvas id="heroCanvas" className="w-full h-64" />
 
       <p className="max-w-xl leading-relaxed">
-        Intelligent allocation suggestions backed by proprietary financial insight—
-        delivered through stunning&nbsp;visuals.
+        Intelligent allocation suggestions backed by proprietary financial
+        insight—delivered through stunning&nbsp;visuals.
       </p>
     </section>
   );
