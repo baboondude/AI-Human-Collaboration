@@ -1,16 +1,14 @@
-[project]
+[tool.poetry]
 name = "ivdar-backend"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "baboondude",email = "codstream7@gmail.com"}
-]
+description = "Backend for IVDAR Google-Sheets data pipeline"
+authors = ["baboondude <codstream7@gmail.com>"]
 readme = "README.md"
-requires-python = "^3.11"
-dependencies = [
-]
+
+[tool.poetry.dependencies]
+python = "^3.13"
 
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
