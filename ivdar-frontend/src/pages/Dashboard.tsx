@@ -1,24 +1,19 @@
-import Highcharts from "highcharts";
-import HighchartsReact from "@highcharts/react-official";
+import * as Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+
+const options: Highcharts.Options = {
+  title: { text: 'Sample Allocation Growth' },
+  xAxis: { categories: ['2020', '2021', '2022', '2023', '2024'] },
+  series: [
+    { type: 'line', name: 'Portfolio', data: [100, 115, 130, 150, 165] },
+  ],
+};
 
 export default function Dashboard() {
-  const data = [
-    { name: "Equities", y: 55 },
-    { name: "Bonds", y: 25 },
-    { name: "Intl", y: 15 },
-    { name: "Cash", y: 5 },
-  ];
-
   return (
-    <div className="p-6">
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={{
-          chart: { type: "variablepie" },
-          title: { text: "Target Allocation (Sample)" },
-          series: [{ type: "variablepie", data }],
-        }}
-      />
-    </div>
+    <section className="space-y-8">
+      <h1 className="text-2xl font-bold">Portfolio Allocation</h1>
+      <HighchartsReact highcharts={Highcharts} options={options} />
+    </section>
   );
 } 
