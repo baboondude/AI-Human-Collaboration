@@ -1,9 +1,15 @@
 import * as React from 'react';
 import Plot from 'react-plotly.js';
+import { useAllocations } from "@/hooks/useAllocations";
 
 export function DonutAllocation() {
-  const labels = ['Equities', 'Bonds', 'Real Estate', 'Commodities', 'Cash'];
-  const values = [40, 25, 15, 10, 10]; // TODO: dynamic
+  const { data, isLoading, error } = useAllocations();
+  
+  if (isLoading) return <p className="text-center">Loading…</p>;
+  if (error || !data) return <p className="text-center text-red-600">Error loading allocations.</p>;
+  
+  const labels = data.map(item => item.ticker);
+  const values = data.map(item => item.weight);
 
   return (
     <div className="w-full max-w-md">
@@ -18,7 +24,7 @@ export function DonutAllocation() {
           },
         ]}
         layout={{
-          title: 'Target Allocation (Mock)',
+          title: 'Target Allocation',
           paper_bgcolor: 'rgba(0,0,0,0)',
           font: { color: '#f9fafb' },
         }}
