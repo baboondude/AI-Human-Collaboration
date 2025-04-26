@@ -34,7 +34,7 @@ A modern web application for intelligent asset allocation suggestions.
 
 ## Project Structure
 
-- `ivdar-frontend/` - React + Vite frontend
+- `frontend/` - React + Vite frontend
 - `ivdar-backend/` - FastAPI backend
 
 ## Contributing
