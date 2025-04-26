@@ -1,36 +1,52 @@
-# Ensure script runs from ivdar-backend directory
-$env:GOOGLE_SERVICE_ACCOUNT_FILE="secrets\service_account.json"
-$env:GOOGLE_SHEET_ID="1Bt0Ke7U3N7OeNsqTUVzILXDVWzBkrykUeul5-dICFJ0"
+# scripts/smoke_sheets.ps1
+<#
+Quick "does it boot & hit /sheets/dashboard?" check.
+Requires:
+  - pyproject deps installed via Poetry
+  - .env with valid creds   (we only check that the file exists)
+#>
 
-# Use the specified Python executable for Poetry
-$POETRY_PY = "C:\Users\btkep\AppData\Roaming\Python\Scripts\python.exe"
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
 
-Write-Host "Starting Uvicorn server via Poetry..."
-$p = Start-Process -FilePath $POETRY_PY \
-    -ArgumentList "-m","poetry","run","uvicorn","app.main:app","--port","8000" \
-    -PassThru -WindowStyle Hidden
-
-if (-not $p) {
-    Write-Error "Failed to start Uvicorn process using $POETRY_PY"
-    exit 1
+function Get-PoetryExe {
+    $poetry = Get-Command poetry -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -First 1
+    if (-not $poetry) {
+        $candidates = @(
+            "$env:LOCALAPPDATA\pypoetry\bin\poetry.exe",
+            "$env:USERPROFILE\AppData\Roaming\Python\Scripts\poetry.exe"
+        ) | Where-Object { Test-Path $_ }
+        if ($candidates) { $poetry = $candidates[0] }
+    }
+    if (-not $poetry) { throw "ERROR: Poetry not found in PATH or common install locations." }
+    return $poetry
 }
 
-Write-Host "Waiting for server to start... (PID: $($p.Id))"
-Start-Sleep -Seconds 8
+$poetryExe = Get-PoetryExe
+Write-Host "OK: Using Poetry at $poetryExe"
 
-$targetUrl = "http://127.0.0.1:8000/sheets/dashboard"
-Write-Host "Sending request to $targetUrl..."
+# Check for .env file existence
+if (-not (Test-Path .env)) { throw "ERROR: .env file missing. Please create it from .env.example." }
 
+# Start backend
+$process = Start-Process $poetryExe -ArgumentList "run", "uvicorn", "app.main:app", "--port=8000" -PassThru
+Write-Host "INFO: Started backend process PID: $($process.Id)"
+Start-Sleep -Seconds 5     # give server time to boot
+
+# Hit the dashboard endpoint
 try {
-    $response = Invoke-RestMethod $targetUrl -UseBasicParsing -TimeoutSec 10 # Added timeout
-    Write-Host "Response received:"
-    $response | ConvertTo-Json -Depth 4 | Out-Host
+    Write-Host "INFO: Pinging http://127.0.0.1:8000/sheets/dashboard..."
+    $resp = Invoke-WebRequest -Uri "http://127.0.0.1:8000/sheets/dashboard" -UseBasicParsing -TimeoutSec 10
+    Write-Host "INFO: Received status code $($resp.StatusCode)"
+    if ($resp.StatusCode -ne 200) { throw "ERROR: Non-200 status code from endpoint: $($resp.StatusCode)" }
+    Write-Host "OK: Smoke test passed (HTTP 200)"
 } catch {
-    Write-Error "Failed to get response from $targetUrl : $_"
+    Write-Error "ERROR: Smoke test failed. Details: $_"
+    throw $_ # Re-throw the exception to ensure non-zero exit code
 } finally {
-    if ($p) {
-        Write-Host "Stopping Uvicorn server (PID: $($p.Id))..."
-        Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue # Added error action
-        Write-Host "Server stopped."
+    if ($process -and !$process.HasExited) {
+        Write-Host "INFO: Stopping backend process PID: $($process.Id)"
+        $process | Stop-Process -Force
+        Write-Host "INFO: Backend process stopped."
     }
 }
