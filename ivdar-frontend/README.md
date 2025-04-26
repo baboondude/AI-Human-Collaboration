@@ -16,4 +16,12 @@ The dev server starts at <http://localhost:5173>.
 - **React + Vite**
 - **Tailwind CSS** for utility-first styling
 - **Framer Motion** & **Anime.js** for animations
-- **Plotly.js** for interactive charts 
+- **Plotly.js** for interactive charts
+
+### Prerequisites
+* **Node 20** (see `.nvmrc`)
+  ```bash
+  nvm install   # or install Node 20+ manually
+  npm install
+  npm run dev
+  ``` 
