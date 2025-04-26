@@ -27,11 +27,10 @@ try {
     $response | ConvertTo-Json -Depth 4 | Out-Host
 } catch {
     Write-Error "Failed to get response from $targetUrl : $_"
-}
-finally {
+} finally {
     if ($p) {
         Write-Host "Stopping Uvicorn server (PID: $($p.Id))..."
         Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue # Added error action
         Write-Host "Server stopped."
     }
-} 
+}
